@@ -1,14 +1,23 @@
 package com.udacity.catpoint.security.application;
 
+import java.util.Objects;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import com.udacity.catpoint.security.data.AlarmStatus;
 import com.udacity.catpoint.security.data.Sensor;
 import com.udacity.catpoint.security.data.SensorType;
 import com.udacity.catpoint.security.service.SecurityService;
 import com.udacity.catpoint.security.service.StyleService;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.*;
-import java.util.Objects;
 
-public final class SensorPanel extends JPanel {
+import net.miginfocom.swing.MigLayout;
+
+public final class SensorPanel extends JPanel implements StatusListener {
 
     private final SecurityService securityService;
     private final JLabel panelLabel = new JLabel("Sensor Management");
@@ -24,6 +33,7 @@ public final class SensorPanel extends JPanel {
         super();
         setLayout(new MigLayout());
         this.securityService = Objects.requireNonNull(securityService, "SecurityService cannot be null");
+        securityService.addStatusListener(this);
         panelLabel.setFont(StyleService.HEADING_FONT);
         addNewSensorButton.addActionListener(e -> addSensor(
                 new Sensor(
@@ -97,6 +107,21 @@ public final class SensorPanel extends JPanel {
     }
     private void removeSensor(Sensor sensor) {
         securityService.removeSensor(sensor);
+        updateSensorList();
+    }
+    
+    @Override
+    public void notify(AlarmStatus status) {
+        // no behavior necessary
+    }
+
+    @Override
+    public void catDetected(boolean catDetected) {
+        // no behavior necessary
+    }
+
+    @Override
+    public void sensorStatusChanged() {
         updateSensorList();
     }
 }

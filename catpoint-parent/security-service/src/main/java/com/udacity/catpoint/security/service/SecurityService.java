@@ -1,16 +1,17 @@
 package com.udacity.catpoint.security.service;
 
+import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.udacity.catpoint.image.ImageService;
 import com.udacity.catpoint.security.application.StatusListener;
 import com.udacity.catpoint.security.data.AlarmStatus;
 import com.udacity.catpoint.security.data.ArmingStatus;
 import com.udacity.catpoint.security.data.SecurityRepository;
 import com.udacity.catpoint.security.data.Sensor;
-import com.udacity.catpoint.image.ImageService;
-import java.awt.image.BufferedImage;
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Objects;
 
 public final class SecurityService {
     private final SecurityRepository securityRepository;
@@ -29,6 +30,7 @@ public final class SecurityService {
                 securityRepository.updateSensor(sensor);
             }
         });
+        statusListeners.forEach(s1 -> s1.sensorStatusChanged());
     }
     public void setArmingStatus(ArmingStatus armingStatus) {
         Objects.requireNonNull(armingStatus, "ArmingStatus cannot be null");
